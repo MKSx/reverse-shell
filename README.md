@@ -1,6 +1,8 @@
 ## A simple reverse-shell written in Go
 
 [![Build Status](https://travis-ci.org/maxlaverse/reverse-shell.svg?branch=master)](https://travis-ci.org/maxlaverse/reverse-shell)
+[![Code Coverage](https://codecov.io/gh/maxlaverse/reverse-shell/branch/master/graph/badge.svg)](https://codecov.io/gh/maxlaverse/reverse-shell)
+
 
 **Disclaimer: This project is for research purposes only, and should only be used on authorized systems.**
 
