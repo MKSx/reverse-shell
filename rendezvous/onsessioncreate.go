@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
-	"github.com/maxlaverse/reverse-shell/common"
 	"github.com/maxlaverse/reverse-shell/message"
 	"github.com/maxlaverse/reverse-shell/rendezvous/api"
 )
@@ -13,7 +13,7 @@ import (
 type onSessionCreate struct{}
 
 func (h onSessionCreate) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	common.Logger.Debugf("On session create")
+	glog.V(2).Infof("On session create")
 	decoder := json.NewDecoder(r.Body)
 	var m api.CreateSession
 	err := decoder.Decode(&m)
@@ -24,11 +24,11 @@ func (h onSessionCreate) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	agent := agentTable.FindAgent(m.Agent)
 	if agent == nil {
-		common.Logger.Debugf("Agent not found %s", m.Agent)
+		glog.V(2).Infof("Agent not found %s", m.Agent)
 		return
 	}
 
-	common.Logger.Debugf("Agent found %s, creating session", m.Agent)
+	glog.V(2).Infof("Agent found %s, creating session", m.Agent)
 	responseTable["generated-token"] = make(chan string)
 	m2 := message.CreateProcess{
 		CommandLine: m.Command,
@@ -37,6 +37,6 @@ func (h onSessionCreate) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	agent.WriteMessage(websocket.BinaryMessage, message.ToBinary(m2))
 
 	t := <-responseTable["generated-token"]
-	common.Logger.Debugf("New session, answering %s", t)
+	glog.V(2).Infof("New session, answering %s", t)
 	w.Write([]byte(t))
 }

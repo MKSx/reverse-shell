@@ -13,6 +13,13 @@ GOOS ?= `go env GOOS`
 
 all: agent master rendezvous
 
+test-master:
+	@cd master && V=$(V) go test -timeout 3s
+
+test-agents:
+	@cd agents/go/cmd && V=$(V) go test -timeout 3s
+	@cd agents/go/handler && V=$(V) go test -timeout 3s
+
 package: clean all .godeps
 	cd bin && tar -zcvf reverse-shell-$(VERSION)-$(GOOS)-$(ARCH).tar.gz agent master rendezvous
 
@@ -24,6 +31,9 @@ master: build_dir .godeps
 
 rendezvous: build_dir .godeps
 	cd rendezvous && go build $(LDFLAGS) -o ../bin/rendezvous
+
+test: all test-master test-agents
+	@true
 
 build_dir:
 	mkdir -p bin

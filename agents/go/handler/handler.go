@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/docker/docker/pkg/namesgenerator"
-	"github.com/maxlaverse/reverse-shell/common"
+	"github.com/golang/glog"
 	"github.com/maxlaverse/reverse-shell/message"
 )
 
@@ -15,7 +15,7 @@ type Handler struct {
 	processTable      *ProcessTable
 }
 
-func New(processOutput chan *ProcessOutput, processTerminated chan *ProcessTerminated) *Handler {
+func NewHandler(processOutput chan *ProcessOutput, processTerminated chan *ProcessTerminated) *Handler {
 	return &Handler{
 		processTable:      newProcessTable(),
 		processOutput:     processOutput,
@@ -32,30 +32,35 @@ func (h *Handler) CreateProcess(commandLine string) string {
 	processOutput := make(chan []byte)
 	processTerminated := make(chan struct{})
 
-	common.Logger.Debugf("Creating process '%s' from '%s'", name, commandLine)
+	glog.V(2).Infof("Creating process '%s' from '%s'", name, commandLine)
 	newProcess := h.processTable.New(name, commandLine)
 	go newProcess.Attach(processOutput, processTerminated)
 
 	go h.pipeOutput(processOutput, processTerminated, newProcess)
 	go func() {
 		newProcess.WaitForExit()
-		common.Logger.Debugf("Process exited")
+		glog.V(2).Infof("Process exited")
 		processTerminated <- struct{}{}
 	}()
 	return name
 }
 
+func (h *Handler) KillProcess(processName string) error {
+	p := h.processTable.Get(processName)
+	return p.Kill()
+}
+
 func (h *Handler) ExecuteCommand(id string, command []byte) error {
 	p := h.processTable.Get(id)
 	if p == nil {
-		common.Logger.Debugf("Process '%s' not found in table. Current table contains:", id)
+		glog.V(2).Infof("Process '%s' not found in table. Current table contains:", id)
 		for _, element := range h.processTable.List() {
-			common.Logger.Debugf("* '%s'", element)
+			glog.V(2).Infof("* '%s'", element)
 		}
 		return errors.New("Process not found")
 	}
 	if p.State != PROCESS_RUNNING {
-		common.Logger.Debugf("The process '%s' is not running anymore", id)
+		glog.V(2).Infof("The process '%s' is not running anymore", id)
 		return errors.New(fmt.Sprintf("The process '%s' is not running anymore", id))
 	}
 	return p.Send(command)
@@ -67,14 +72,14 @@ PipeLoop:
 		select {
 
 		case o := <-processOutput:
-			common.Logger.Debugf("Received %d bytes in processOutput", len(o))
+			glog.V(2).Infof("Received %d bytes in processOutput", len(o))
 			h.processOutput <- &ProcessOutput{
 				Process: p,
 				Result:  o,
 			}
 
 		case <-processTerminated:
-			common.Logger.Debugf("Received a processTerminated signal")
+			glog.V(2).Infof("Received a processTerminated signal")
 			h.processTerminated <- &ProcessTerminated{Process: p}
 			break PipeLoop
 		}

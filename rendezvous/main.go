@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/golang/glog"
 	flags "github.com/jessevdk/go-flags"
-	"github.com/maxlaverse/reverse-shell/common"
 )
 
 var agentTable = NewAgentTable()
@@ -20,17 +20,15 @@ func Start(port int32) {
 	go http.Handle("/session/attach/", onSessionAttach{})
 	go http.Handle("/session/create", onSessionCreate{})
 
-	common.Logger.Infof("Ready for incoming connections")
+	glog.V(0).Infof("Ready for incoming connections")
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
 
 var options struct {
-	LogLevel func(string) `short:"l" long:"log-level" description:"log level" default:"info"`
-	Port     int32        `short:"P" long:"port" env:"PORT" description:"Port" required:"true"`
+	Port int32 `short:"P" long:"port" env:"PORT" description:"Port" required:"true"`
 }
 
 func main() {
-	options.LogLevel = common.InitLogger
 	var parser = flags.NewParser(&options, flags.Default)
 
 	if _, err := parser.Parse(); err != nil {

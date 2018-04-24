@@ -1,8 +1,8 @@
-package common
+package util
 
 import "github.com/gorilla/websocket"
 
-var Upgrader = websocket.Upgrader{
+var WebSocketUpgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 }

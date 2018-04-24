@@ -3,20 +3,21 @@ package main
 import (
 	"net/http"
 
+	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
-	"github.com/maxlaverse/reverse-shell/common"
 	"github.com/maxlaverse/reverse-shell/message"
+	"github.com/maxlaverse/reverse-shell/util"
 )
 
 type onAgentConnection struct{}
 
 func (h onAgentConnection) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	conn, err := common.Upgrader.Upgrade(w, r, nil)
+	conn, err := util.WebSocketUpgrader.Upgrade(w, r, nil)
 	if err != nil {
-		common.Logger.Debugf("Err:%s", err)
+		glog.V(2).Infof("Err:%s", err)
 		return
 	}
-	common.Logger.Debugf("New agent %s", conn.RemoteAddr().String())
+	glog.V(2).Infof("New agent %s", conn.RemoteAddr().String())
 
 	agentTable.AddAgent(conn)
 
@@ -26,11 +27,11 @@ func (h onAgentConnection) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		for {
 			_, m, err := conn.ReadMessage()
 			if err != nil {
-				common.Logger.Debugf("Agent '%s' disconnected. Clearing sessions! Reason: %s", conn.RemoteAddr().String(), err)
+				glog.V(2).Infof("Agent '%s' disconnected. Clearing sessions! Reason: %s", conn.RemoteAddr().String(), err)
 
 				ses := sessionTable.FindSessionByAgent(conn)
 				for _, masterConn := range ses {
-					common.Logger.Debugf("Session '%s' was lost due to agent failure", masterConn.Id)
+					glog.V(2).Infof("Session '%s' was lost due to agent failure", masterConn.Id)
 					a := message.ProcessTerminated{
 						Id: masterConn.Id,
 					}
@@ -47,10 +48,10 @@ func (h onAgentConnection) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			b := message.FromBinary(m)
 			switch v := b.(type) {
 			case *message.ProcessOutput:
-				common.Logger.Debugf("New Agent ProcessOutput for: %s (%d)", v.Id, len(v.Id))
+				glog.V(2).Infof("New Agent ProcessOutput for: %s (%d)", v.Id, len(v.Id))
 				masterConn := sessionTable.FindSession(v.Id)
 				if masterConn == nil {
-					common.Logger.Debugf("That's bad session was lost %s", v.Id)
+					glog.V(2).Infof("That's bad session was lost %s", v.Id)
 				} else {
 					for _, c := range masterConn.masterConn {
 						c.WriteMessage(websocket.BinaryMessage, m)
@@ -58,7 +59,7 @@ func (h onAgentConnection) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 			case *message.ProcessCreated:
-				common.Logger.Debugf("New Agent ProcessCreated for: %s (%d), %s\n", v.Id, len(v.Id), v.WantedId)
+				glog.V(2).Infof("New Agent ProcessCreated for: %s (%d), %s\n", v.Id, len(v.Id), v.WantedId)
 
 				s := Session{
 					Id:        v.Id,
@@ -73,20 +74,20 @@ func (h onAgentConnection) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					responseTable[v.WantedId] = nil
 				}
 			case *message.ProcessTerminated:
-				common.Logger.Debugf("Session ended for: %s (%d), %s\n", v.Id, len(v.Id))
+				glog.V(2).Infof("Session ended for: %s (%d), %s\n", v.Id, len(v.Id))
 				//Create just session, sent back id, wait for attachement
 
 				masterConn := sessionTable.FindSession(v.Id)
 				masterConn.State = SESSION_CLOSED
 				if masterConn == nil {
-					common.Logger.Debugf("That's bad session was lost %s", v.Id)
+					glog.V(2).Infof("That's bad session was lost %s", v.Id)
 				} else {
 					for _, c := range masterConn.masterConn {
 						c.WriteMessage(websocket.BinaryMessage, m)
 					}
 				}
 			case *message.SessionTable:
-				common.Logger.Debugf("Restoring session table")
+				glog.V(2).Infof("Restoring session table")
 				//Create just session, sent back id, wait for attachement
 				for _, v2 := range v.Sessions {
 					s := Session{
@@ -94,12 +95,12 @@ func (h onAgentConnection) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						agentConn: conn,
 						State:     SESSION_OPEN,
 					}
-					common.Logger.Debugf("Adding session: %s", v2)
+					glog.V(2).Infof("Adding session: %s", v2)
 					sessionTable.AddSession(&s)
 				}
 
 			default:
-				common.Logger.Debugf("Received Agent an unknown message type: %v", v)
+				glog.V(2).Infof("Received Agent an unknown message type: %v", v)
 			}
 		}
 	}()

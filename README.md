@@ -1,7 +1,10 @@
-**Disclaimer: This project is for research purposes only, and should only be used on authorized systems. Accessing a computer system or network without authorization or explicit permission is illegal. My primary goal was to write some Go.**
+**Disclaimer: This project is for research purposes only, and should only be used on authorized systems.**
 
 ## Introduction
 "A reverse shell is a type of shell in which the target machine communicates back to the attacking machine. The attacking machine has a listener port on which it receives the connection, which by using, code or command execution is achieved." ([source](http://resources.infosecinstitute.com/icmp-reverse-shell/))
+
+A reverse shell is also really useful when you're playing with your SSH server and want to have a backup plan
+in case of misconfiguration.
 
 Of course the simplest and most portable way is to use [Netcat](http://nc110.sourceforge.net/).
 
@@ -29,17 +32,24 @@ $ cd reverse-shell && make
 ```
 
 ## Agent
-The `agent` is an application that will start one or multiple shells and allow a master to control them.
-
 ```bash
-Usage:
-  agent [OPTIONS] <command>
+Starts an agent listening for remote commands. The Agent can receive remote commands is various ways.
 
-Available commands:
-  stdin      Start a stdin agent
-  tcp        Start a tcp agent and connect to a remote master
-  tcpdirect  Start a tcpdirect agent and listen on a tcp port waiting for orders
-  websocket  Start a websocketCommand agent and connect to a remote master or rendez-vous
+Usage:
+  reverse-shell-agent [command]
+
+Available Commands:
+  help        Help about any command
+  stdin       Agent that listens for command on stdin
+  tcp         Agent that connects to a remove tcp endpoints and listen for commands
+  tcpdirect   Agent that listens for commands on a local port
+  websocket   Agent that connects to a websocket endpoints and wait for commands
+
+Flags:
+  -h, --help          help for reverse-shell-agent
+  -v, --verbose int   Be verbose on log output
+
+Use "reverse-shell-agent [command] --help" for more information about a command.
 ```
 
 ### stdin
@@ -165,7 +175,6 @@ Available commands:
 ```
 
 ## Todo
-* learn how to write proper tests
 * add scp-like commands
 * improve logging messages
 * read variables from environment

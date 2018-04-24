@@ -4,25 +4,26 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
-	"github.com/maxlaverse/reverse-shell/common"
 	"github.com/maxlaverse/reverse-shell/message"
+	"github.com/maxlaverse/reverse-shell/util"
 )
 
 type onSessionAttach struct{}
 
 func (h onSessionAttach) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	requestedSession := r.URL.Path[16:]
-	common.Logger.Debugf("New attachement request for '%s'", requestedSession)
+	glog.V(2).Infof("New attachement request for '%s'", requestedSession)
 
 	session := sessionTable.FindSession(requestedSession)
 	if session == nil {
-		common.Logger.Debugf("Session not found")
+		glog.V(2).Infof("Session not found")
 		w.Write([]byte("Session not found"))
 		return
 	}
 
-	conn, err := common.Upgrader.Upgrade(w, r, nil)
+	conn, err := util.WebSocketUpgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
 		return
@@ -35,7 +36,7 @@ func (h onSessionAttach) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		for {
 			_, m, err := conn.ReadMessage()
 			if err != nil {
-				common.Logger.Debugf("ReadMessage error on the masterChannel: %s", err)
+				glog.V(2).Infof("ReadMessage error on the masterChannel: %s", err)
 				return
 			}
 			b := message.FromBinary(m)
@@ -45,7 +46,7 @@ func (h onSessionAttach) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			case *message.ExecuteCommand:
 				session.agentConn.WriteMessage(websocket.BinaryMessage, m)
 			default:
-				common.Logger.Debugf("Received Master an unknown message type: %v", v)
+				glog.V(2).Infof("Received Master an unknown message type: %v", v)
 			}
 		}
 	}()
