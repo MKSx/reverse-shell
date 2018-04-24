@@ -5,7 +5,12 @@ go:
 
 install:
   - go get -u github.com/golang/dep/...
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/mattn/goveralls
   - dep ensure
 
 script:
   - make test
+
+after_success:
+  - make cover

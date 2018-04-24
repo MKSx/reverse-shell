@@ -40,3 +40,18 @@ build_dir:
 
 clean:
 	rm -rf bin/*
+
+.PHONY: cover
+cover:
+	@rm -rf coverage.txt
+	@for d in `go list ./...`; do \
+		t=$$(date +%s); \
+		go test -coverprofile=cover.out -covermode=atomic $$d || exit 1; \
+		echo "Coverage test $$d took $$(($$(date +%s)-t)) seconds"; \
+		if [ -f cover.out ]; then \
+			cat cover.out >> coverage.txt; \
+			rm cover.out; \
+		fi; \
+	done
+	@echo "Uploading coverage results..."
+	@curl -s https://codecov.io/bash | bash
