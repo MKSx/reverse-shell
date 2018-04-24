@@ -1,4 +1,10 @@
+## A simple reverse-shell written in Go
+
+[![Build Status](https://travis-ci.org/maxlaverse/reverse-shell.svg?branch=master)](https://travis-ci.org/maxlaverse/reverse-shell)
+
 **Disclaimer: This project is for research purposes only, and should only be used on authorized systems.**
+
+---
 
 ## Introduction
 "A reverse shell is a type of shell in which the target machine communicates back to the attacking machine. The attacking machine has a listener port on which it receives the connection, which by using, code or command execution is achieved." ([source](http://resources.infosecinstitute.com/icmp-reverse-shell/))
