@@ -61,7 +61,8 @@ func (p *Process) Attach(outputChannel chan []byte, processCloseChannel chan str
 				return
 			} else if err != nil {
 				glog.V(2).Infof("No idea what to do!An error has occured while reading: %s", err)
-				panic(err)
+				processCloseChannel <- struct{}{}
+				return
 			} else {
 				glog.V(2).Infof("Received %d bytes from process", size)
 				outputChannel <- msg[0:size]

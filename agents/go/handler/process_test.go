@@ -45,5 +45,4 @@ func TestProcessSend(t *testing.T) {
 
 	assert.Equal(t, PROCESS_EXITED, p.State, "Wrong process state")
 	assert.Equal(t, "hi this is a test", string(<-processOutput), "Wrong process output")
-
 }
