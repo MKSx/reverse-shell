@@ -11,7 +11,7 @@ GOOS ?= `go env GOOS`
 	dep ensure
 	touch .godeps
 
-all: agent master rendezvous docs
+all: agent master rendezvous
 
 test-master:
 	@cd master && V=$(V) go test -timeout 3s
@@ -20,7 +20,7 @@ test-agents:
 	@cd agents/go/cmd && V=$(V) go test -timeout 3s
 	@cd agents/go/handler && V=$(V) go test -timeout 3s
 
-package: clean all .godeps
+package: clean all docs .godeps
 	cd bin && tar -zcvf reverse-shell-$(VERSION)-$(GOOS)-$(ARCH).tar.gz agent master rendezvous
 
 agent: build_dir .godeps

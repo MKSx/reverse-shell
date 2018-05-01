@@ -14,6 +14,8 @@ func TestMissingArgument(t *testing.T) {
 	websocketListener := NewWebsocketListenerCommand(cli)
 	websocketListener.SetArgs([]string{})
 
+	websocketListener.SilenceUsage = true
+	websocketListener.SilenceErrors = true
 	err := websocketListener.Execute()
 
 	assert.Equal(t, "a url must be given", err.Error())
