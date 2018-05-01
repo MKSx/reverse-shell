@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -23,6 +24,12 @@ func NewWebsocketListenerCommand(agent Cli) *cobra.Command {
 		Use:              "websocket",
 		Short:            "Agent that connects to a websocket endpoints and wait for commands",
 		TraverseChildren: true,
+		Args: func(cmd *cobra.Command, args []string) error {
+			if len(opts.url) == 0 {
+				return errors.New("a url must be given")
+			}
+			return nil
+		},
 		Run: func(cmd *cobra.Command, args []string) {
 			agent.SafeStart(newWebsocketListener(opts.url))
 		},
