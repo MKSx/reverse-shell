@@ -9,6 +9,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestMissingArgument(t *testing.T) {
+	cli := NewAgentCli()
+	websocketListener := NewWebsocketListenerCommand(cli)
+	websocketListener.SetArgs([]string{})
+
+	websocketListener.SilenceUsage = true
+	websocketListener.SilenceErrors = true
+	err := websocketListener.Execute()
+
+	assert.Equal(t, "a url must be given", err.Error())
+}
+
 func TestStructComparison(t *testing.T) {
 	// Initialize a fake WebSocket master
 	dummyMaster := test.NewDummyMaster(t)

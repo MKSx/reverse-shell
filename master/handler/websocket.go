@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"fmt"
@@ -11,6 +11,43 @@ import (
 	"github.com/maxlaverse/reverse-shell/message"
 	"github.com/maxlaverse/reverse-shell/util"
 )
+
+func Listen(port int32) error {
+	glog.V(2).Infof("Listening to incoming connections from Agents")
+
+	stdinChannel := make(chan []byte)
+	go func() {
+		for {
+			select {
+			default:
+				var msg = make([]byte, 1024)
+				size, err := os.Stdin.Read(msg)
+				if err == io.EOF {
+					return
+				} else if err != nil {
+					panic(err)
+				} else {
+					glog.V(2).Infof("Sending to stdint")
+					stdinChannel <- msg[0:size]
+				}
+			}
+		}
+	}()
+
+	stdoutChannel := make(chan []byte)
+	go func() {
+		for {
+			select {
+			case n := <-stdoutChannel:
+				os.Stdout.Write(n)
+				os.Stdout.WriteString("\n")
+			}
+		}
+	}()
+
+	go http.Handle("/agent/", onConnectMaster{stdinChannel: stdinChannel, stdoutChannel: stdoutChannel})
+	return http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+}
 
 type onConnectMaster struct {
 	stdinChannel  chan []byte
@@ -92,41 +129,4 @@ func (h onConnectMaster) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}()
-}
-
-func Listen(port int) error {
-	glog.V(2).Infof("Listening to incoming connections from Agents")
-
-	stdinChannel := make(chan []byte)
-	go func() {
-		for {
-			select {
-			default:
-				var msg = make([]byte, 1024)
-				size, err := os.Stdin.Read(msg)
-				if err == io.EOF {
-					return
-				} else if err != nil {
-					panic(err)
-				} else {
-					glog.V(2).Infof("Sending to stdint")
-					stdinChannel <- msg[0:size]
-				}
-			}
-		}
-	}()
-
-	stdoutChannel := make(chan []byte)
-	go func() {
-		for {
-			select {
-			case n := <-stdoutChannel:
-				os.Stdout.Write(n)
-				os.Stdout.WriteString("\n")
-			}
-		}
-	}()
-
-	go http.Handle("/agent/", onConnectMaster{stdinChannel: stdinChannel, stdoutChannel: stdoutChannel})
-	return http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }

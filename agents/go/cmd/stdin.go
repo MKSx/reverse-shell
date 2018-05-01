@@ -31,6 +31,7 @@ func NewStdinListenerCommand(agent Cli) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:              "stdin",
 		Short:            "Agent that listens for command on stdin",
+		Long:             "Absolutely useless. It's basically just piping *stdin* to a process on the same machine.",
 		TraverseChildren: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			newStdinListener(os.Stdin, os.Stdout).Listen()

