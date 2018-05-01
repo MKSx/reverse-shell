@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/cpuguy83/go-md2man"
+  packages = ["md2man"]
+  revision = "20f5889cbdc3c73dbd2862796665e7c465ade7d1"
+  version = "v1.0.8"
+
+[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
@@ -44,8 +50,17 @@
   version = "v1.0.0"
 
 [[projects]]
-  name = "github.com/spf13/cobra"
+  name = "github.com/russross/blackfriday"
   packages = ["."]
+  revision = "55d61fa8aa702f59229e6cff85793c22e580eaf5"
+  version = "v1.5.1"
+
+[[projects]]
+  name = "github.com/spf13/cobra"
+  packages = [
+    ".",
+    "doc"
+  ]
   revision = "a1f051bc3eba734da4772d60e2d677f47cf93ef4"
   version = "v0.0.2"
 
@@ -61,9 +76,15 @@
   revision = "12b6f73e6084dad08a7c6e575284b177ecafbc71"
   version = "v1.2.1"
 
+[[projects]]
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
+  version = "v2.2.1"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4aa9c674bdb8a17703c1d9df67bcaceda12affec5dbe2f4fc697c00452540a7c"
+  inputs-digest = "5ec0237639d1bf60e10c204a52201985ffe821ad95f281ded1bced57349fb03f"
   solver-name = "gps-cdcl"
   solver-version = 1

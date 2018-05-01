@@ -11,7 +11,7 @@ GOOS ?= `go env GOOS`
 	dep ensure
 	touch .godeps
 
-all: agent master rendezvous
+all: agent master rendezvous docs
 
 test-master:
 	@cd master && V=$(V) go test -timeout 3s
@@ -31,6 +31,13 @@ master: build_dir .godeps
 
 rendezvous: build_dir .godeps
 	cd rendezvous && go build $(LDFLAGS) -o ../bin/rendezvous
+
+doc-generator: build_dir .godeps
+	cd docs && go build $(LDFLAGS) -o ../bin/doc-generator
+
+docs: doc-generator
+	cd docs && rm -rf agent/* master/* rendezvous/*
+	./bin/doc-generator
 
 test: all test-master test-agents
 	@true
