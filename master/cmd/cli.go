@@ -1,10 +1,33 @@
 package cmd
 
 import (
+	"flag"
+	"strconv"
 	"time"
 
 	"github.com/golang/glog"
+	"github.com/spf13/cobra"
 )
+
+func GetCommand() *cobra.Command {
+	verbose := 0
+	command := &cobra.Command{
+		Use:              "reverse-shell-master",
+		TraverseChildren: true,
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			flag.Set("logtostderr", "true")
+			flag.Set("v", strconv.Itoa(verbose))
+			flag.CommandLine.Parse([]string{})
+		},
+	}
+
+	command.PersistentFlags().IntVarP(&verbose, "verbose", "v", 0, "Be verbose on log output")
+
+	master := NewMasterCli()
+	command.AddCommand(NewRendezVousCommand(master))
+	command.AddCommand(NewListenCommand(master))
+	return command
+}
 
 // MasterCli is the base of the command-line tool client
 type MasterCli struct {
