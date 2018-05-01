@@ -15,7 +15,7 @@ reverse-shell-agent tcpdirect [flags]
 ```
 You can connect to it using netcat:
 # On the agent (1.2.3.4)
-$ agent tcpdirect -P 7777
+$ reverse-shell-agent tcpdirect --port 7777
 
 # On the master
 $ nc 1.2.3.4 7777
