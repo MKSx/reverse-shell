@@ -11,6 +11,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	tcpDirectListenerExample = `You can connect to it using netcat:
+# On the agent (1.2.3.4)
+$ agent tcpdirect -P 7777
+
+# On the master
+$ nc 1.2.3.4 7777
+`
+)
+
 type tcpdirectListenerOptions struct {
 	host string
 	port int32
@@ -23,6 +33,7 @@ func NewTCPdirectListenerCommand(agent Cli) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:              "tcpdirect",
 		Short:            "Agent that listens for commands on a local port",
+		Example:          tcpDirectListenerExample,
 		TraverseChildren: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			agent.SafeStart(newTCPDirectListener(opts.host, opts.port))
