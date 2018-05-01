@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -9,7 +9,25 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/maxlaverse/reverse-shell/message"
+	"github.com/spf13/cobra"
 )
+
+// NewAttachCommand creates a new cobra.Command for `reverse-shell-master rendezvous session-attach`
+func NewAttachCommand(agent Cli) *cobra.Command {
+	var url string
+	cmd := &cobra.Command{
+		Use:              "attach",
+		Short:            "attach to an existing session",
+		TraverseChildren: true,
+		Run: func(cmd *cobra.Command, args []string) {
+			AttachSession(url, args[0])
+		},
+	}
+
+	cmd.Flags().StringVarP(&url, "url", "", "", "Url of the rendez-vous point")
+
+	return cmd
+}
 
 func AttachSession(url string, sessionId string) {
 
