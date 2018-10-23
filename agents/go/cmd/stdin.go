@@ -96,7 +96,7 @@ func (l *stdinListener) pipeToProcessInput() {
 			var msg = make([]byte, 1024)
 			glog.V(2).Info("Waiting for message in pipeToProcessInput()")
 			size, err := l.stdIn.Read(msg)
-			glog.V(2).Info("Got message: %v", msg)
+			glog.V(2).Infof("Got message: %v", msg)
 			if err == io.EOF {
 				return
 			} else if err != nil {

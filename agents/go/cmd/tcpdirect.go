@@ -110,7 +110,7 @@ func (l *tcpdirectListener) Listen() error {
 func (l *tcpdirectListener) pipeToProcessInput(conn net.Conn) {
 	err := conn.SetReadDeadline(time.Now().Add(600 * time.Second))
 	if err != nil {
-		glog.V(2).Infof("SetReadDeadline failed:", err)
+		glog.V(2).Infof("SetReadDeadline failed: %v", err)
 		l.readerClosed <- struct{}{}
 		conn.Close()
 		return
