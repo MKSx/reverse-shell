@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/maxlaverse/reverse-shell/agents/go/cmd/test"
+	"github.com/maxlaverse/reverse-shell/agent/cmd/test"
 	"github.com/maxlaverse/reverse-shell/message"
 	"github.com/stretchr/testify/assert"
 )

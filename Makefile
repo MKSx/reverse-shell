@@ -16,15 +16,15 @@ all: agent master rendezvous
 test-master:
 	@cd master && V=$(V) go test -timeout 3s
 
-test-agents:
-	@cd agents/go/cmd && V=$(V) go test -timeout 3s
-	@cd agents/go/handler && V=$(V) go test -timeout 3s
+test-agent:
+	@cd agent/cmd && V=$(V) go test -timeout 3s
+	@cd agent/handler && V=$(V) go test -timeout 3s
 
 package: clean all docs .godeps
 	cd bin && tar -zcvf reverse-shell-$(VERSION)-$(GOOS)-$(ARCH).tar.gz agent master rendezvous
 
 agent: build_dir .godeps
-	cd agents/go && go build $(LDFLAGS) -o ../../bin/agent
+	cd agent && go build $(LDFLAGS) -o ../bin/agent
 
 master: build_dir .godeps
 	cd master && go build $(LDFLAGS) -o ../bin/master
@@ -39,7 +39,7 @@ docs: doc-generator
 	cd docs && rm -rf agent/* master/* rendezvous/*
 	./bin/doc-generator
 
-test: all test-master test-agents
+test: all test-master test-agent
 	@true
 
 build_dir:

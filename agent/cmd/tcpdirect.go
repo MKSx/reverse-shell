@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/golang/glog"
-	"github.com/maxlaverse/reverse-shell/agents/go/handler"
+	"github.com/maxlaverse/reverse-shell/agent/handler"
 	"github.com/spf13/cobra"
 )
 

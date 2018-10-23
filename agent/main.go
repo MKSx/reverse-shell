@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/maxlaverse/reverse-shell/agents/go/cmd"
+	"github.com/maxlaverse/reverse-shell/agent/cmd"
 )
 
 func main() {

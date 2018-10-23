@@ -7,7 +7,7 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
-	"github.com/maxlaverse/reverse-shell/agents/go/handler"
+	"github.com/maxlaverse/reverse-shell/agent/handler"
 	"github.com/maxlaverse/reverse-shell/message"
 	"github.com/spf13/cobra"
 )
