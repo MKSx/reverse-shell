@@ -19,6 +19,7 @@ func GetCommand() *cobra.Command {
 			flag.Set("v", strconv.Itoa(verbose))
 			flag.CommandLine.Parse([]string{})
 		},
+		DisableAutoGenTag: true,
 	}
 
 	command.PersistentFlags().IntVarP(&verbose, "verbose", "v", 0, "Be verbose on log output")

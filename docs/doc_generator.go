@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	agents "github.com/maxlaverse/reverse-shell/agents/go/cmd"
+	agents "github.com/maxlaverse/reverse-shell/agent/cmd"
 	master "github.com/maxlaverse/reverse-shell/master/cmd"
 	rendezvous "github.com/maxlaverse/reverse-shell/rendezvous/cmd"
 	"github.com/spf13/cobra"

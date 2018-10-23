@@ -52,6 +52,7 @@ func GetCommand() *cobra.Command {
 		Run: func(*cobra.Command, []string) {
 			start(port)
 		},
+		DisableAutoGenTag: true,
 	}
 
 	command.Flags().IntVarP(&verbose, "verbose", "v", 0, "Be verbose on log output")
