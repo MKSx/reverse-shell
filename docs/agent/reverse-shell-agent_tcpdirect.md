@@ -17,7 +17,7 @@ You can connect to it using netcat:
 # On the agent (1.2.3.4)
 $ reverse-shell-agent tcpdirect --port 7777
 
-# On the master
+# On the client
 $ nc 1.2.3.4 7777
 
 ```

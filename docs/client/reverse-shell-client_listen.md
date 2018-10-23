@@ -1,4 +1,4 @@
-## reverse-shell-master listen
+## reverse-shell-client listen
 
 listen for agents to connect using websocket
 
@@ -7,7 +7,7 @@ listen for agents to connect using websocket
 listen for agents to connect using websocket
 
 ```
-reverse-shell-master listen [flags]
+reverse-shell-client listen [flags]
 ```
 
 ### Options
@@ -25,5 +25,5 @@ reverse-shell-master listen [flags]
 
 ### SEE ALSO
 
-* [reverse-shell-master](reverse-shell-master.md)	 - 
+* [reverse-shell-client](reverse-shell-client.md)	 - 
 

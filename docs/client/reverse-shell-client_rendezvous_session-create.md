@@ -1,4 +1,4 @@
-## reverse-shell-master rendezvous session-create
+## reverse-shell-client rendezvous session-create
 
 create a new session on a given agent
 
@@ -7,7 +7,7 @@ create a new session on a given agent
 create a new session on a given agent
 
 ```
-reverse-shell-master rendezvous session-create [flags]
+reverse-shell-client rendezvous session-create [flags]
 ```
 
 ### Options
@@ -25,5 +25,5 @@ reverse-shell-master rendezvous session-create [flags]
 
 ### SEE ALSO
 
-* [reverse-shell-master rendezvous](reverse-shell-master_rendezvous.md)	 - Connects to a remote rendez-vous point
+* [reverse-shell-client rendezvous](reverse-shell-client_rendezvous.md)	 - Connects to a remote rendez-vous point
 

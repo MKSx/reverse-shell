@@ -12,7 +12,7 @@ const (
 
 type Session struct {
 	Id         string
-	masterConn []*websocket.Conn
+	clientConn []*websocket.Conn
 	agentConn  *websocket.Conn
 	State      SessionState
 }
@@ -44,7 +44,7 @@ func (s *SessionTable) AddSession(sess *Session) {
 }
 
 func (s *SessionTable) AttachToSession(id string, conn *websocket.Conn) {
-	s.sessionTable[id].masterConn = append(s.sessionTable[id].masterConn, conn)
+	s.sessionTable[id].clientConn = append(s.sessionTable[id].clientConn, conn)
 }
 
 func (s *SessionTable) FindSession(session string) *Session {

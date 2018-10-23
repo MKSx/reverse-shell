@@ -1,4 +1,4 @@
-## reverse-shell-master rendezvous attach
+## reverse-shell-client rendezvous attach
 
 attach to an existing session
 
@@ -7,7 +7,7 @@ attach to an existing session
 attach to an existing session
 
 ```
-reverse-shell-master rendezvous attach [flags]
+reverse-shell-client rendezvous attach [flags]
 ```
 
 ### Options
@@ -25,5 +25,5 @@ reverse-shell-master rendezvous attach [flags]
 
 ### SEE ALSO
 
-* [reverse-shell-master rendezvous](reverse-shell-master_rendezvous.md)	 - Connects to a remote rendez-vous point
+* [reverse-shell-client rendezvous](reverse-shell-client_rendezvous.md)	 - Connects to a remote rendez-vous point
 

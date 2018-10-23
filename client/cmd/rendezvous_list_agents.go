@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// NewListAgentCommand creates a new cobra.Command for `reverse-shell-master rendezvous list-agents`
+// NewListAgentCommand creates a new cobra.Command for `reverse-shell-client rendezvous list-agents`
 func NewListAgentCommand(agent Cli) *cobra.Command {
 	var url string
 	cmd := &cobra.Command{

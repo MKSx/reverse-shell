@@ -1,4 +1,4 @@
-## reverse-shell-master rendezvous list-agents
+## reverse-shell-client rendezvous list-agents
 
 list all the agents available on a rendez-vous
 
@@ -7,7 +7,7 @@ list all the agents available on a rendez-vous
 list all the agents available on a rendez-vous
 
 ```
-reverse-shell-master rendezvous list-agents [flags]
+reverse-shell-client rendezvous list-agents [flags]
 ```
 
 ### Options
@@ -25,5 +25,5 @@ reverse-shell-master rendezvous list-agents [flags]
 
 ### SEE ALSO
 
-* [reverse-shell-master rendezvous](reverse-shell-master_rendezvous.md)	 - Connects to a remote rendez-vous point
+* [reverse-shell-client rendezvous](reverse-shell-client_rendezvous.md)	 - Connects to a remote rendez-vous point
 
