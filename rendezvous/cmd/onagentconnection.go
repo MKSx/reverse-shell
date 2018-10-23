@@ -74,7 +74,7 @@ func (h onAgentConnection) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					responseTable[v.WantedId] = nil
 				}
 			case *message.ProcessTerminated:
-				glog.V(2).Infof("Session ended for: %s (%d), %s\n", v.Id, len(v.Id))
+				glog.V(2).Infof("Session ended for: %s (%d)\n", v.Id, len(v.Id))
 				//Create just session, sent back id, wait for attachement
 
 				masterConn := sessionTable.FindSession(v.Id)
