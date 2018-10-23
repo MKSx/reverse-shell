@@ -30,14 +30,14 @@ func (h onAgentConnection) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				glog.V(2).Infof("Agent '%s' disconnected. Clearing sessions! Reason: %s", conn.RemoteAddr().String(), err)
 
 				ses := sessionTable.FindSessionByAgent(conn)
-				for _, masterConn := range ses {
-					glog.V(2).Infof("Session '%s' was lost due to agent failure", masterConn.Id)
+				for _, clientConn := range ses {
+					glog.V(2).Infof("Session '%s' was lost due to agent failure", clientConn.Id)
 					a := message.ProcessTerminated{
-						Id: masterConn.Id,
+						Id: clientConn.Id,
 					}
-					masterConn.State = SESSION_LOST
-					if masterConn != nil {
-						for _, c := range masterConn.masterConn {
+					clientConn.State = SESSION_LOST
+					if clientConn != nil {
+						for _, c := range clientConn.clientConn {
 							c.WriteMessage(websocket.BinaryMessage, message.ToBinary(a))
 						}
 					}
@@ -49,11 +49,11 @@ func (h onAgentConnection) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			switch v := b.(type) {
 			case *message.ProcessOutput:
 				glog.V(2).Infof("New Agent ProcessOutput for: %s (%d)", v.Id, len(v.Id))
-				masterConn := sessionTable.FindSession(v.Id)
-				if masterConn == nil {
+				clientConn := sessionTable.FindSession(v.Id)
+				if clientConn == nil {
 					glog.V(2).Infof("That's bad session was lost %s", v.Id)
 				} else {
-					for _, c := range masterConn.masterConn {
+					for _, c := range clientConn.clientConn {
 						c.WriteMessage(websocket.BinaryMessage, m)
 					}
 				}
@@ -77,12 +77,12 @@ func (h onAgentConnection) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				glog.V(2).Infof("Session ended for: %s (%d)\n", v.Id, len(v.Id))
 				//Create just session, sent back id, wait for attachement
 
-				masterConn := sessionTable.FindSession(v.Id)
-				masterConn.State = SESSION_CLOSED
-				if masterConn == nil {
+				clientConn := sessionTable.FindSession(v.Id)
+				clientConn.State = SESSION_CLOSED
+				if clientConn == nil {
 					glog.V(2).Infof("That's bad session was lost %s", v.Id)
 				} else {
-					for _, c := range masterConn.masterConn {
+					for _, c := range clientConn.clientConn {
 						c.WriteMessage(websocket.BinaryMessage, m)
 					}
 				}

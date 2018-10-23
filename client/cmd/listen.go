@@ -1,11 +1,11 @@
 package cmd
 
 import (
-	"github.com/maxlaverse/reverse-shell/master/handler"
+	"github.com/maxlaverse/reverse-shell/client/handler"
 	"github.com/spf13/cobra"
 )
 
-// NewListenCommand creates a new cobra.Command for `reverse-shell-master rendezvous listen`
+// NewListenCommand creates a new cobra.Command for `reverse-shell-client rendezvous listen`
 func NewListenCommand(agent Cli) *cobra.Command {
 	var port int32
 	cmd := &cobra.Command{

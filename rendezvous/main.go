@@ -1,6 +1,6 @@
 package main
 
-import "github.com/maxlaverse/reverse-shell/master/cmd"
+import "github.com/maxlaverse/reverse-shell/client/cmd"
 
 func main() {
 

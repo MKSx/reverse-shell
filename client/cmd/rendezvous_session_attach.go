@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// NewAttachCommand creates a new cobra.Command for `reverse-shell-master rendezvous session-attach`
+// NewAttachCommand creates a new cobra.Command for `reverse-shell-client rendezvous session-attach`
 func NewAttachCommand(agent Cli) *cobra.Command {
 	var url string
 	cmd := &cobra.Command{

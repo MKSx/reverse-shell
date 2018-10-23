@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// NewListSessionCommand creates a new cobra.Command for `reverse-shell-master rendezvous session-list`
+// NewListSessionCommand creates a new cobra.Command for `reverse-shell-client rendezvous session-list`
 func NewListSessionCommand(agent Cli) *cobra.Command {
 	var url string
 	cmd := &cobra.Command{
@@ -21,7 +21,7 @@ func NewListSessionCommand(agent Cli) *cobra.Command {
 			fmt.Printf("List of sessions:\n")
 			l, _ := listSessions(url)
 			for _, v := range l {
-				fmt.Printf(" * %s => agent: %s, masters: %s, state: %s\n", v.Name, v.Agent, v.Masters, v.State)
+				fmt.Printf(" * %s => agent: %s, masters: %s, state: %s\n", v.Name, v.Agent, v.Clients, v.State)
 			}
 
 		},

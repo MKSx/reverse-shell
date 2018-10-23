@@ -1,7 +1,7 @@
 vendor
 bin
-agents/go/agent
+agent/agent
 rendezvous/rendezvous
-master/master
+client/client
 .godeps
 coverage.txt

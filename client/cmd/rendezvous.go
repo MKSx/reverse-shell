@@ -4,7 +4,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// NewRendezVousCommand creates a new cobra.Command for `reverse-shell-master rendezvous`
+// NewRendezVousCommand creates a new cobra.Command for `reverse-shell-client rendezvous`
 func NewRendezVousCommand(agent Cli) *cobra.Command {
 	command := &cobra.Command{
 		Use:              "rendezvous",

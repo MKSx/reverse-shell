@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	agents "github.com/maxlaverse/reverse-shell/agent/cmd"
-	master "github.com/maxlaverse/reverse-shell/master/cmd"
+	client "github.com/maxlaverse/reverse-shell/client/cmd"
 	rendezvous "github.com/maxlaverse/reverse-shell/rendezvous/cmd"
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
@@ -12,7 +12,7 @@ import (
 
 func main() {
 	generate(agents.GetCommand(), "./docs/agent")
-	generate(master.GetCommand(), "./docs/master")
+	generate(client.GetCommand(), "./docs/client")
 	generate(rendezvous.GetCommand(), "./docs/rendezvous")
 }
 

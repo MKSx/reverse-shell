@@ -28,7 +28,7 @@ func (h onSessionAttach) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	session.masterConn = append(session.masterConn, conn)
+	session.clientConn = append(session.clientConn, conn)
 
 	go func() {
 		defer conn.Close()
@@ -36,7 +36,7 @@ func (h onSessionAttach) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		for {
 			_, m, err := conn.ReadMessage()
 			if err != nil {
-				glog.V(2).Infof("ReadMessage error on the masterChannel: %s", err)
+				glog.V(2).Infof("ReadMessage error on the clientChannel: %s", err)
 				return
 			}
 			b := message.FromBinary(m)
@@ -46,7 +46,7 @@ func (h onSessionAttach) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			case *message.ExecuteCommand:
 				session.agentConn.WriteMessage(websocket.BinaryMessage, m)
 			default:
-				glog.V(2).Infof("Received Master an unknown message type: %v", v)
+				glog.V(2).Infof("Received Client an unknown message type: %v", v)
 			}
 		}
 	}()

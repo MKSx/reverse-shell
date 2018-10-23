@@ -7,7 +7,7 @@ type AgentListResponseAgent struct {
 type SessionListResponseAgent struct {
 	Name    string   `json:"name"`
 	Agent   string   `json:"agent"`
-	Masters []string `json:"masters"`
+	Clients []string `json:"clients"`
 	State   string   `json:"state"`
 }
 
