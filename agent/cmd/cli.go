@@ -9,12 +9,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// GetCommand returns the main cobra.Command of the CLI
 func GetCommand() *cobra.Command {
 	verbose := 0
 	command := &cobra.Command{
 		Use:              "reverse-shell-agent",
-		Short:            "Agents listening for remote commands",
-		Long:             `Starts an agent listening for remote commands. The Agent can receive remote commands is various ways.`,
+		Short:            "A Go agents listening for remote commands",
+		Long:             `Starts the agent and listens for remote commands.`,
 		TraverseChildren: true,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			flag.Set("logtostderr", "true")

@@ -31,7 +31,7 @@ func NewTCPListenerCommand(agent Cli) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:              "tcp",
-		Short:            "Agent that connects to a remove tcp endpoints and listen for commands",
+		Short:            "Agent that connects to a remove tcp endpoints and listens for commands",
 		Example:          tcpListenerExample,
 		TraverseChildren: true,
 		Run: func(cmd *cobra.Command, args []string) {

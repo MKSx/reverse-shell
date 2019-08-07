@@ -24,5 +24,5 @@ reverse-shell-agent stdin [flags]
 
 ### SEE ALSO
 
-* [reverse-shell-agent](reverse-shell-agent.md)	 - Agents listening for remote commands
+* [reverse-shell-agent](reverse-shell-agent.md)	 - A Go agents listening for remote commands
 

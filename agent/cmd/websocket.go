@@ -36,7 +36,7 @@ func NewWebsocketListenerCommand(agent Cli) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:              "websocket",
-		Short:            "Agent that connects to a websocket endpoints and wait for commands",
+		Short:            "Agent that connects to a websocket endpoints and waits for commands",
 		Long:             "Connect to a remote websocket and execute every command received. The remote host can be a `master` or a `rendezvous`.",
 		Example:          websocketListenerExample,
 		TraverseChildren: true,

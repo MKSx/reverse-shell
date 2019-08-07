@@ -1,12 +1,10 @@
 language: go
 
 go:
-  - 1.11
+  - 1.12
 
 install:
-  - go get -u github.com/golang/dep/...
   - go get golang.org/x/tools/cmd/cover
-  - dep ensure
 
 script:
   - make test

@@ -38,5 +38,5 @@ $ nc 1.2.3.4 7777
 
 ### SEE ALSO
 
-* [reverse-shell-agent](reverse-shell-agent.md)	 - Agents listening for remote commands
+* [reverse-shell-agent](reverse-shell-agent.md)	 - A Go agents listening for remote commands
 

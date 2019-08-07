@@ -7,10 +7,6 @@ LDFLAGS=-tags release -ldflags "-s -w -X=main.Version=$(VERSION) -X=main.Build=$
 ARCH ?= `go env GOHOSTARCH`
 GOOS ?= `go env GOOS`
 
-.godeps:
-	dep ensure
-	touch .godeps
-
 all: agent client rendezvous
 
 test-client:
@@ -20,19 +16,19 @@ test-agent:
 	@cd agent/cmd && V=$(V) go test -timeout 3s
 	@cd agent/handler && V=$(V) go test -timeout 3s
 
-package: clean all docs .godeps
-	cd bin && tar -zcvf reverse-shell-$(VERSION)-$(GOOS)-$(ARCH).tar.gz agent client rendezvous
+package: clean all docs
+	cd bin && tar -zcvf reverse-shell-$(VERSION)-$(GOOS)-$(ARCH).tar.gz reverse-shell-agent reverse-shell-client reverse-shell-rendezvous
 
-agent: build_dir .godeps
-	cd agent && go build $(LDFLAGS) -o ../bin/agent
+agent: build_dir
+	cd agent && go build $(LDFLAGS) -o ../bin/reverse-shell-agent
 
-client: build_dir .godeps
-	cd client && go build $(LDFLAGS) -o ../bin/client
+client: build_dir
+	cd client && go build $(LDFLAGS) -o ../bin/reverse-shell-client
 
-rendezvous: build_dir .godeps
-	cd rendezvous && go build $(LDFLAGS) -o ../bin/rendezvous
+rendezvous: build_dir
+	cd rendezvous && go build $(LDFLAGS) -o ../bin/reverse-shell-rendezvous
 
-doc-generator: build_dir .godeps
+doc-generator: build_dir
 	cd docs && go build $(LDFLAGS) -o ../bin/doc-generator
 
 docs: doc-generator

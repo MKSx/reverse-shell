@@ -76,7 +76,7 @@ func (l *stdinListener) Listen() error {
 	for {
 		select {
 		case <-l.interruptChannel:
-			glog.V(0).Info("Received an interrupt message")
+			glog.V(0).Info("Received an interrupt message - Sending End-Of-Text")
 			l.handler.ExecuteCommand(processID, []byte{'\u0003'})
 		case msg := <-l.inputCommand:
 			glog.V(2).Info("Received an input command")

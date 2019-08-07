@@ -25,6 +25,6 @@ func TestExecutingCommand(t *testing.T) {
 
 	// Wait for the listener to exit and test the result
 	err := <-doneCh
-	assert.Equal(t, err.Error(), "Process terminated", "Wrong error message")
-	assert.Contains(t, outputBuf.String(), "THIS IS A TEST\r\nexit\r\n", "Unexpected response")
+	assert.Equal(t, err.Error(), "Process terminated")
+	assert.Contains(t, outputBuf.String(), "THIS IS A TEST\r\nexit\r\n")
 }

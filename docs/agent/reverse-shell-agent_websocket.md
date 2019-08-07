@@ -1,6 +1,6 @@
 ## reverse-shell-agent websocket
 
-Agent that connects to a websocket endpoints and wait for commands
+Agent that connects to a websocket endpoints and waits for commands
 
 ### Synopsis
 
@@ -41,5 +41,5 @@ $ http_proxy=http://your-proxy:3128 https_proxy=http://your-proxy:3128 agent web
 
 ### SEE ALSO
 
-* [reverse-shell-agent](reverse-shell-agent.md)	 - Agents listening for remote commands
+* [reverse-shell-agent](reverse-shell-agent.md)	 - A Go agents listening for remote commands
 

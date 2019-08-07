@@ -1,10 +1,10 @@
 ## reverse-shell-agent tcp
 
-Agent that connects to a remove tcp endpoints and listen for commands
+Agent that connects to a remove tcp endpoints and listens for commands
 
 ### Synopsis
 
-Agent that connects to a remove tcp endpoints and listen for commands
+Agent that connects to a remove tcp endpoints and listens for commands
 
 ```
 reverse-shell-agent tcp [flags]
@@ -37,5 +37,5 @@ $ reverse-shell-agent tcp --host=1.2.3.4 --port=7777
 
 ### SEE ALSO
 
-* [reverse-shell-agent](reverse-shell-agent.md)	 - Agents listening for remote commands
+* [reverse-shell-agent](reverse-shell-agent.md)	 - A Go agents listening for remote commands
 

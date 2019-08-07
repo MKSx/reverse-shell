@@ -46,7 +46,6 @@ func TestStructComparison(t *testing.T) {
 
 	// Should receive a process structure
 	c2 := dummyMaster.ReadRawMessage().(*message.ProcessCreated)
-	assert.Equal(t, c2.Id, "thirsty_turing", "The session name was wrong")
 
 	// Sends the test command
 	dummyMaster.SendMessage(message.ExecuteCommand{
